@@ -47,9 +47,28 @@
     <input type="number" id="quantidadeBaldes" value="200" />
   </fieldset>
 
+  <fieldset>
+    <legend>Peso dos Baldes</legend>
+    <label>Peso por balde (kg):</label>
+    <input type="number" id="pesoPorBalde" value="22.650" step="0.001" />
+  </fieldset>
+
   <button onclick="calcular()">Calcular</button>
 
   <div id="resultado" class="resultado" style="margin-top:20px;"></div>
+
+  <div class="resumo" style="margin-top:30px; background:#eef; padding:15px; border-radius:8px;">
+    <h2>📋 Resumo da Calculadora</h2>
+    <p>Esta calculadora permite simular o carregamento de <strong>200 baldes</strong> com dimensões <strong>39 x 28 x 23 cm</strong>, empilhados em até <strong>4 baldes de altura</strong>, dentro de uma carreta com medidas internas de <strong>2,40 m de largura por 12,00 m de comprimento</strong>.</p>
+    <p>Ela calcula automaticamente:</p>
+    <ul>
+      <li>🔢 Número de pilhas necessárias;</li>
+      <li>📐 Área ocupada no piso (em m²);</li>
+      <li>🚚 Área disponível no piso da carreta (em m²);</li>
+      <li>📦 Se os baldes cabem ou não no espaço disponível;</li>
+      <li>⚖️ Peso total da carga, considerando o peso individual de cada balde.</li>
+    </ul>
+  </div>
 
   <script>
     function calcular() {
@@ -60,6 +79,7 @@
       const larguraBalde = parseFloat(document.getElementById("larguraBalde").value);
       const baldesPorPilha = parseInt(document.getElementById("baldesPorPilha").value);
       const quantidadeBaldes = parseInt(document.getElementById("quantidadeBaldes").value);
+      const pesoPorBalde = parseFloat(document.getElementById("pesoPorBalde").value);
 
       const pilhasNecessarias = Math.ceil(quantidadeBaldes / baldesPorPilha);
       const areaBaseBalde_cm2 = comprimentoBalde * larguraBalde;
@@ -71,6 +91,8 @@
 
       const cabeNoCaminhao = areaTotalNecessaria_cm2 <= areaPisoCaminhao_cm2;
 
+      const pesoTotal = pesoPorBalde * quantidadeBaldes;
+
       const resultado = document.getElementById("resultado");
       resultado.innerHTML = `
         <p><strong>Resultado:</strong></p>
@@ -78,6 +100,8 @@
         <p>📦 Área da base de cada pilha: <strong>${areaBaseBalde_cm2} cm²</strong></p>
         <p>📐 Área total necessária no piso: <strong>${areaTotalNecessaria_m2.toFixed(2)} m²</strong></p>
         <p>🚚 Área disponível no piso do caminhão: <strong>${areaPisoCaminhao_m2.toFixed(2)} m²</strong></p>
+        <p>⚖️ Peso por balde: <strong>${pesoPorBalde.toFixed(3)} kg</strong></p>
+        <p>⚖️ Peso total da carga: <strong>${pesoTotal.toFixed(2)} kg</strong></p>
         <p class="${cabeNoCaminhao ? 'ok' : 'alerta'}">
           ${cabeNoCaminhao ? '✅ Os baldes cabem no caminhão com esse empilhamento.' : '⚠️ Os baldes não cabem no piso disponível do caminhão.'}
         </p>
