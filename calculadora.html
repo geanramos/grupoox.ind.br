@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculadora de Cubagem - Baldes no Caminhão</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; color: #333; }
+    h1 { font-size: 22px; margin-bottom: 10px; }
+    fieldset { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background: #fff; }
+    legend { font-weight: bold; }
+    label { display: block; margin-top: 10px; }
+    input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 10px 20px; background: #0078d4; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #005fa3; }
+    .resultado { background: #fff; border: 1px solid #ccc; padding: 15px; border-radius: 8px; }
+    .ok { color: green; }
+    .alerta { color: darkorange; }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora de Cubagem - Baldes no Caminhão</h1>
+
+  <fieldset>
+    <legend>Dimensões do Caminhão</legend>
+    <label>Largura interna (cm):</label>
+    <input type="number" id="larguraCaminhao" value="240" />
+    <label>Comprimento interno (cm):</label>
+    <input type="number" id="comprimentoCaminhao" value="1200" />
+  </fieldset>
+
+  <fieldset>
+    <legend>Dimensões dos Baldes</legend>
+    <label>Altura do balde (cm):</label>
+    <input type="number" id="alturaBalde" value="39" />
+    <label>Comprimento da base (cm):</label>
+    <input type="number" id="comprimentoBalde" value="23" />
+    <label>Largura da base (cm):</label>
+    <input type="number" id="larguraBalde" value="28" />
+    <label>Baldes por pilha (altura):</label>
+    <input type="number" id="baldesPorPilha" value="4" />
+  </fieldset>
+
+  <fieldset>
+    <legend>Quantidade de Baldes</legend>
+    <label>Total de baldes:</label>
+    <input type="number" id="quantidadeBaldes" value="200" />
+  </fieldset>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div id="resultado" class="resultado" style="margin-top:20px;"></div>
+
+  <script>
+    function calcular() {
+      const larguraCaminhao = parseFloat(document.getElementById("larguraCaminhao").value);
+      const comprimentoCaminhao = parseFloat(document.getElementById("comprimentoCaminhao").value);
+      const alturaBalde = parseFloat(document.getElementById("alturaBalde").value);
+      const comprimentoBalde = parseFloat(document.getElementById("comprimentoBalde").value);
+      const larguraBalde = parseFloat(document.getElementById("larguraBalde").value);
+      const baldesPorPilha = parseInt(document.getElementById("baldesPorPilha").value);
+      const quantidadeBaldes = parseInt(document.getElementById("quantidadeBaldes").value);
+
+      const pilhasNecessarias = Math.ceil(quantidadeBaldes / baldesPorPilha);
+      const areaBaseBalde_cm2 = comprimentoBalde * larguraBalde;
+      const areaTotalNecessaria_cm2 = areaBaseBalde_cm2 * pilhasNecessarias;
+      const areaTotalNecessaria_m2 = areaTotalNecessaria_cm2 / 10000;
+
+      const areaPisoCaminhao_cm2 = larguraCaminhao * comprimentoCaminhao;
+      const areaPisoCaminhao_m2 = areaPisoCaminhao_cm2 / 10000;
+
+      const cabeNoCaminhao = areaTotalNecessaria_cm2 <= areaPisoCaminhao_cm2;
+
+      const resultado = document.getElementById("resultado");
+      resultado.innerHTML = `
+        <p><strong>Resultado:</strong></p>
+        <p>🔢 Pilhas necessárias: <strong>${pilhasNecessarias}</strong></p>
+        <p>📦 Área da base de cada pilha: <strong>${areaBaseBalde_cm2} cm²</strong></p>
+        <p>📐 Área total necessária no piso: <strong>${areaTotalNecessaria_m2.toFixed(2)} m²</strong></p>
+        <p>🚚 Área disponível no piso do caminhão: <strong>${areaPisoCaminhao_m2.toFixed(2)} m²</strong></p>
+        <p class="${cabeNoCaminhao ? 'ok' : 'alerta'}">
+          ${cabeNoCaminhao ? '✅ Os baldes cabem no caminhão com esse empilhamento.' : '⚠️ Os baldes não cabem no piso disponível do caminhão.'}
+        </p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
